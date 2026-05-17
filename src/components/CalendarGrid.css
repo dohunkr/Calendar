@@ -142,8 +142,49 @@
   white-space: nowrap;
   cursor: pointer;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  transition: filter 0.1s;
 }
 
 .event-chip:hover {
   filter: brightness(0.9);
 }
+
+/* Multi-day Event Styling */
+.event-chip.multi-start {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  margin-right: -9px;
+  padding-right: 1px;
+  z-index: 2;
+  position: relative;
+}
+
+.event-chip.multi-middle {
+  border-radius: 0;
+  margin-left: -9px;
+  margin-right: -9px;
+  padding-left: 1px;
+  padding-right: 1px;
+  z-index: 1;
+  position: relative;
+}
+
+.event-chip.multi-end {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  margin-left: -9px;
+  padding-left: 1px;
+  z-index: 2;
+  position: relative;
+}
+
+/* Drag-select highlights */
+.calendar-cell.drag-selected {
+  background: rgba(93, 184, 166, 0.12) !important; /* Premium soft teal background */
+  border-color: rgba(93, 184, 166, 0.3) !important;
+}
+
+.calendar-grid {
+  user-select: none; /* Prevents text selection highlight during drag selection */
+}
+

@@ -165,10 +165,23 @@ function App() {
           currentDate={currentDate} 
           events={events} 
           onEventSelect={(e) => { setEditingEvent(e); setIsModalOpen(true); }}
-          onDayClick={(date) => { 
-            const d = new Date(date);
-            d.setHours(9, 0, 0);
-            setEditingEvent({ startDate: d.toISOString() }); 
+          onDayClick={(startDate, endDate) => { 
+            const s = new Date(startDate);
+            const e = new Date(endDate);
+            
+            // If it's a single day, default to a 1-hour appointment block (9 AM to 10 AM)
+            if (s.toDateString() === e.toDateString()) {
+              s.setHours(9, 0, 0, 0);
+              e.setHours(10, 0, 0, 0);
+            }
+            
+            setEditingEvent({ 
+              startDate: s.toISOString(),
+              endDate: e.toISOString(),
+              isAllDay: s.toDateString() !== e.toDateString(), // Multi-day drag defaults to all-day!
+              color: '#cc785c',
+              notifyMinutesBefore: 15
+            }); 
             setIsModalOpen(true); 
           }}
         />
