@@ -23,7 +23,7 @@ export function TopNav({ currentDate, onDateChange, onAddEvent }: TopNavProps) {
   return (
     <header className="top-nav">
       <div className="nav-brand">
-        <span>Anti</span>Gravity Calendar
+        <span>Dohun</span>Calender
       </div>
       
       <div className="nav-controls">
