@@ -1,0 +1,52 @@
+.suggested-slot-card {
+  background: var(--color-surface-dark-elevated);
+  border: 1px solid rgba(250,249,245,0.1);
+  border-radius: var(--rounded-md);
+  padding: var(--spacing-sm) var(--spacing-md);
+  margin: var(--spacing-xs) var(--spacing-md);
+}
+
+.slot-header {
+  margin-bottom: var(--spacing-xs);
+}
+
+.slot-badge {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--color-on-dark);
+  background: rgba(255,255,255,0.1);
+  padding: 2px 6px;
+  border-radius: var(--rounded-xs);
+}
+
+.slot-title {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-on-dark);
+  margin-bottom: 2px;
+}
+
+.slot-time {
+  font-size: 12px;
+  color: var(--color-accent-teal);
+  margin-bottom: var(--spacing-xs);
+}
+
+.slot-reason {
+  font-size: 12px;
+  color: var(--color-on-dark-soft);
+  font-style: italic;
+  margin-bottom: var(--spacing-sm);
+  line-height: 1.4;
+}
+
+.slot-actions {
+  display: flex;
+}
+
+.slot-btn {
+  width: 100%;
+  height: 32px;
+  font-size: 12px;
+}

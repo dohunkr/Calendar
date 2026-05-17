@@ -1,0 +1,31 @@
+.notification-banner {
+  background: var(--color-surface-dark);
+  color: var(--color-on-dark);
+  padding: var(--spacing-sm) var(--spacing-xl);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(250,249,245,0.1);
+  font-family: var(--font-body);
+  font-size: 14px;
+}
+
+.banner-content {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.banner-icon {
+  font-size: 16px;
+}
+
+.banner-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.banner-btn {
+  height: 36px;
+  padding: 0 16px;
+}

@@ -1,0 +1,97 @@
+.top-nav {
+  height: 64px;
+  background: var(--color-canvas);
+  border-bottom: 1px solid var(--color-hairline);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--spacing-xl);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.nav-brand {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  color: var(--color-ink);
+}
+
+.nav-brand span {
+  color: var(--color-primary);
+}
+
+.nav-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.nav-btn {
+  padding: 0 12px;
+}
+
+.date-display {
+  font-family: var(--font-body);
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--color-ink);
+  min-width: 120px;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  user-select: none;
+}
+
+.year-picker-dropdown {
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-canvas);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--rounded-lg);
+  padding: var(--spacing-md);
+  width: 320px;
+  max-height: 400px;
+  overflow-y: auto;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+  z-index: 200;
+}
+
+.decade-group {
+  margin-bottom: var(--spacing-md);
+}
+
+.decade-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-muted);
+  margin-bottom: var(--spacing-xs);
+  text-align: left;
+}
+
+.years-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 4px;
+}
+
+.year-btn {
+  background: transparent;
+  border: none;
+  border-radius: var(--rounded-xs);
+  padding: 6px 0;
+  font-size: 13px;
+  color: var(--color-body);
+  cursor: pointer;
+}
+.year-btn:hover {
+  background: var(--color-surface-soft);
+}
+.year-btn.active {
+  background: var(--color-primary);
+  color: white;
+}
