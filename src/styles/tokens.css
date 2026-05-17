@@ -62,3 +62,36 @@
   --font-body:    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-mono:    'JetBrains Mono', 'Fira Code', monospace;
 }
+
+html.dark, :root.dark {
+  /* Canvas & Surfaces */
+  --color-canvas:            #141413; /* 기본 페이지 배경 — 따뜻한 다크 인크 */
+  --color-surface-card:      #1c1b19; /* 카드 배경 */
+  --color-surface-soft:      #1f1e1c; /* 섹션 구분 */
+  --color-surface-cream-strong: #252422;
+  --color-surface-dark:      #1f1e1b;
+  --color-surface-dark-elevated: #2a2926;
+  --color-surface-dark-soft: #252421;
+
+  /* Brand - Softer coral glow for better accessibility in dark mode */
+  --color-primary:           #d98c70; 
+  --color-primary-active:    #e5a38a;
+  --color-primary-disabled:  #3a3835;
+
+  /* Borders */
+  --color-hairline:          #2a2926;
+  --color-hairline-soft:     #1f1e1c;
+
+  /* Text */
+  --color-ink:               #faf9f5; /* 헤더는 따뜻한 크림 화이트로 */
+  --color-body-strong:       #efe9de;
+  --color-body:              #ded9cf;
+  --color-muted:             #a09d96;
+  --color-muted-soft:        #73716c;
+  --color-on-primary:        #141413; /* 산호색 버튼 위의 텍스트는 가독성을 위해 어둡게 */
+
+  /* Saturday and Sunday/Holiday Colors (softer variants for dark mode) */
+  --color-saturday:          #7694f5;
+  --color-holiday:           #e06e6e;
+}
+

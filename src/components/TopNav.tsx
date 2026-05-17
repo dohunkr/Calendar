@@ -10,6 +10,8 @@ interface TopNavProps {
   userEmail: string | null;
   onOpenAuth: () => void;
   onLogout: () => void;
+  isDarkMode: boolean;
+  onToggleDarkMode: () => void;
 }
 
 export function TopNav({ 
@@ -18,7 +20,9 @@ export function TopNav({
   onAddEvent,
   userEmail,
   onOpenAuth,
-  onLogout
+  onLogout,
+  isDarkMode,
+  onToggleDarkMode
 }: TopNavProps) {
   const [showYearPicker, setShowYearPicker] = useState(false);
   const decades = generateDecades();
@@ -66,6 +70,14 @@ export function TopNav({
       </div>
 
       <div className="nav-actions">
+        <button 
+          className="btn-secondary theme-toggle-btn" 
+          onClick={onToggleDarkMode} 
+          title={isDarkMode ? '라이트 모드' : '다크 모드'}
+          aria-label="테마 전환"
+        >
+          {isDarkMode ? '☀️' : '🌙'}
+        </button>
         {userEmail ? (
           <div className="user-badge">
             <span className="user-email">☁️ {userEmail}</span>
