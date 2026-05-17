@@ -71,6 +71,8 @@ Parse the user's natural language input and extract event details.
 Current date and time: ${currentDate.toISOString()}
 Current timezone: Asia/Seoul (KST, UTC+9)
 
+CRITICAL: Extract exact times and minutes as specified by the user (e.g., "8시 20분" must be parsed exactly as "08:20:00" or "20:20:00" depending on AM/PM, NEVER round to 1-hour increments!).
+
 Respond ONLY with a valid JSON object. No markdown, no explanation.
 JSON format:
 {
@@ -91,13 +93,20 @@ If you cannot parse a valid event from the input, respond with: {"error": "파�
     { role: 'user', content: userInput },
   ]);
 
+  console.log('[AI Raw Response Choices]:', data.choices);
   const text = data.choices[0]?.message?.content ?? '';
+  console.log('[AI Extracted Text]:', text);
   
   try {
     const parsed = JSON.parse(text.replace(/```json|```/g, '').trim());
-    if (parsed.error) return null;
+    if (parsed.error) {
+      console.warn('[AI Parse error field]:', parsed.error);
+      return null;
+    }
+    console.log('[AI Successfully Parsed Event Object]:', parsed);
     return parsed as ParsedEvent;
-  } catch {
+  } catch (err) {
+    console.error('[AI JSON parsing failed]:', err, 'Raw text:', text);
     return null;
   }
 }
@@ -142,11 +151,16 @@ Return 2–3 suggestions maximum.`;
     { role: 'user', content: userRequest },
   ], 1024, 0.2);
 
+  console.log('[AI Free Slot Raw Response Choices]:', data.choices);
   const text = data.choices[0]?.message?.content ?? '';
+  console.log('[AI Free Slot Extracted Text]:', text);
   
   try {
-    return JSON.parse(text.replace(/```json|```/g, '').trim());
-  } catch {
+    const parsed = JSON.parse(text.replace(/```json|```/g, '').trim());
+    console.log('[AI Free Slot Successfully Parsed Slots]:', parsed);
+    return parsed;
+  } catch (err) {
+    console.error('[AI Free Slot JSON parsing failed]:', err, 'Raw text:', text);
     return [];
   }
 }

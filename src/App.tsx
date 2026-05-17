@@ -82,31 +82,37 @@ function App() {
     setIsAILoading(true);
     setSuggestions([]);
 
-    // Check if it's a request to "find time"
-    if (userInput.includes('찾아') || userInput.includes('추천') || userInput.includes('빈 시간')) {
-      const searchRange = {
-        start: new Date(),
-        end: addMonths(new Date(), 1)
-      };
-      const slots = await findAndScheduleFreeSlot(userInput, events, searchRange);
-      setSuggestions(slots);
+    try {
+      // Check if it's a request to "find time"
+      if (userInput.includes('찾아') || userInput.includes('추천') || userInput.includes('빈 시간')) {
+        const searchRange = {
+          start: new Date(),
+          end: addMonths(new Date(), 1)
+        };
+        const slots = await findAndScheduleFreeSlot(userInput, events, searchRange);
+        setSuggestions(slots);
+        setIsAILoading(false);
+        return;
+      }
+
+      // Otherwise, parse as normal event
+      const parsed = await parseEventFromNaturalLanguage(userInput, new Date());
       setIsAILoading(false);
-      return;
-    }
 
-    // Otherwise, parse as normal event
-    const parsed = await parseEventFromNaturalLanguage(userInput, new Date());
-    setIsAILoading(false);
-
-    if (parsed) {
-      // Open modal with parsed data for confirmation
-      setEditingEvent({
-        ...parsed,
-        notifyMinutesBefore: 15
-      });
-      setIsModalOpen(true);
-    } else {
-      alert("일정을 이해하지 못했습니다. 더 구체적으로 적어주세요.");
+      if (parsed) {
+        // Open modal with parsed data for confirmation
+        setEditingEvent({
+          ...parsed,
+          notifyMinutesBefore: 15
+        });
+        setIsModalOpen(true);
+      } else {
+        alert("일정을 이해하지 못했습니다. 더 구체적으로 적어주세요.");
+      }
+    } catch (error: any) {
+      setIsAILoading(false);
+      console.error("AI 파싱 중 오류 발생:", error);
+      alert("AI 서비스 통신 중 오류가 발생했습니다. 인터넷 연결 또는 클라우드 설정을 확인하시고 새로고침(F5) 후 다시 시도해 주세요.");
     }
   };
 
