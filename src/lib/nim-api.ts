@@ -5,19 +5,48 @@ const NVIDIA_MODEL = 'meta/llama-3.1-70b-instruct';
 // Helper to decide endpoint based on env
 async function callNIM(messages: any[], maxTokens: number = 512, temperature: number = 0.1) {
   const apiKey = import.meta.env.VITE_NVIDIA_NIM_API_KEY;
-  let endpoint = '/api/nim';
-  let headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-  };
+  const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 
-  if (apiKey) {
-    endpoint = 'https://integrate.api.nvidia.com/v1/chat/completions';
-    headers['Authorization'] = `Bearer ${apiKey}`;
+  // In production (non-localhost), or if no client-side API key is bundled, always route via our secure serverless backend proxy
+  if (!isLocalhost || !apiKey) {
+    try {
+      const response = await fetch('/api/nim', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: NVIDIA_MODEL,
+          messages,
+          max_tokens: maxTokens,
+          temperature,
+        }),
+      });
+
+      if (response.ok) {
+        return await response.json();
+      }
+      
+      // If serverless proxy returned an error (e.g. 404 on local dev), fall through to direct fallback if key is available
+      if (!apiKey) {
+        throw new Error(`Serverless proxy failed with status: ${response.status}`);
+      }
+    } catch (err) {
+      console.warn('Serverless proxy (/api/nim) call failed, attempting direct fallback:', err);
+      if (!apiKey) {
+        throw err;
+      }
+    }
   }
 
-  const response = await fetch(endpoint, {
+  // Fallback / Dev Mode: Direct client-side call (only works if local browser security/CORS check is disabled or bypassed)
+  console.log('Using direct client-side fallback to Nvidia NIM...');
+  const response = await fetch('https://integrate.api.nvidia.com/v1/chat/completions', {
     method: 'POST',
-    headers,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${apiKey}`,
+    },
     body: JSON.stringify({
       model: NVIDIA_MODEL,
       messages,
@@ -25,6 +54,10 @@ async function callNIM(messages: any[], maxTokens: number = 512, temperature: nu
       temperature,
     }),
   });
+
+  if (!response.ok) {
+    throw new Error(`Nvidia direct API returned error status: ${response.status}`);
+  }
 
   return response.json();
 }
