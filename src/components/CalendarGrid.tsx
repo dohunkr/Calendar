@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { CalendarEvent } from '../lib/types';
 import { getMonthCalendarGrid } from '../lib/date-utils';
 import { expandRecurrences } from '../lib/recurrence';
 import { EventChip } from './EventChip';
-import { format, isSameMonth, isSameDay } from 'date-fns';
+import { getKoreanHolidays } from '../lib/korean-holidays';
+import { format, isSameMonth, isSameDay, getDay } from 'date-fns';
 import './CalendarGrid.css';
 
 interface CalendarGridProps {
@@ -23,30 +24,73 @@ export function CalendarGrid({ currentDate, events, onEventSelect, onDayClick }:
   // Expand recurrences for the view
   const viewEvents = expandRecurrences(events, start, end);
 
+  // Fetch Korean holidays for current, previous, and next year to cover border months
+  const holidays = useMemo(() => {
+    const currentYear = currentDate.getFullYear();
+    return [
+      ...getKoreanHolidays(currentYear - 1),
+      ...getKoreanHolidays(currentYear),
+      ...getKoreanHolidays(currentYear + 1),
+    ];
+  }, [currentDate]);
+
   return (
     <div className="calendar-container">
       <div className="weekdays-header">
-        {WEEKDAYS.map(day => (
-          <div key={day} className="weekday-cell">{day}</div>
-        ))}
+        {WEEKDAYS.map((day, idx) => {
+          const isSundayHeader = idx === 0;
+          const isSaturdayHeader = idx === 6;
+          return (
+            <div 
+              key={day} 
+              className={`weekday-cell ${isSundayHeader ? 'sunday-header' : ''} ${isSaturdayHeader ? 'saturday-header' : ''}`}
+            >
+              {day}
+            </div>
+          );
+        })}
       </div>
       <div className="calendar-grid">
         {days.map(day => {
           const isToday = isSameDay(day, new Date());
           const isOtherMonth = !isSameMonth(day, currentDate);
+          const dayOfWeek = getDay(day);
           
+          // Check if this day is a public holiday
+          const holidayMatch = holidays.find(h => isSameDay(h.date, day));
+          const isHoliday = !!holidayMatch;
+          const isSundayVal = dayOfWeek === 0;
+          const isSaturdayVal = dayOfWeek === 6;
+
           const dayEvents = viewEvents
             .filter(e => isSameDay(new Date(e.startDate), day))
             .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
 
+          // Styling classes for the day cell and text
+          let dayClass = 'day-number';
+          if (isToday) {
+            dayClass += ' today-num';
+          } else if (isHoliday || isSundayVal) {
+            dayClass += ' holiday-num';
+          } else if (isSaturdayVal) {
+            dayClass += ' saturday-num';
+          }
+
           return (
             <div 
               key={day.toISOString()} 
-              className={`calendar-cell ${isOtherMonth ? 'other-month' : ''} ${isToday ? 'today' : ''}`}
+              className={`calendar-cell ${isOtherMonth ? 'other-month' : ''} ${isToday ? 'today' : ''} ${isHoliday ? 'has-holiday' : ''}`}
               onClick={() => onDayClick(day)}
             >
-              <div className={`day-number ${isToday ? 'today-num' : ''}`}>
-                {format(day, 'd')}
+              <div className="day-header-row">
+                <div className={dayClass}>
+                  {format(day, 'd')}
+                </div>
+                {holidayMatch && (
+                  <span className="holiday-label" title={holidayMatch.name}>
+                    {holidayMatch.name}
+                  </span>
+                )}
               </div>
               <div className="events-container">
                 {dayEvents.map(event => (
@@ -70,3 +114,4 @@ export function CalendarGrid({ currentDate, events, onEventSelect, onDayClick }:
     </div>
   );
 }
+

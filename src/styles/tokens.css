@@ -36,6 +36,10 @@
   --color-warning:           #d4a017;
   --color-error:             #c64545;
 
+  /* Saturday and Sunday/Holiday Colors */
+  --color-saturday:          #4b70e2; /* 토요일을 위한 고급스러운 블루 */
+  --color-holiday:           #c64545; /* 일요일 및 공휴일을 위한 브랜드 웜레드 */
+
   /* Spacing */
   --spacing-xxs: 4px;
   --spacing-xs:  8px;

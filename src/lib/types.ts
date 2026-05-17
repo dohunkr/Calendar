@@ -17,7 +17,7 @@ export interface ParsedEvent {
   startDate: string;
   endDate: string;
   isAllDay: boolean;
-  recurrence: string | null;
+  recurrence: 'daily' | 'weekly' | 'monthly' | 'yearly' | null;
   recurrenceEndDate: string | null;
   description: string;
   color: string;

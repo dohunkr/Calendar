@@ -72,6 +72,58 @@
   border-radius: 50%;
 }
 
+.day-number.saturday-num {
+  color: var(--color-saturday);
+}
+
+.day-number.holiday-num {
+  color: var(--color-holiday);
+}
+
+.weekday-cell.saturday-header {
+  color: var(--color-saturday);
+}
+
+.weekday-cell.sunday-header {
+  color: var(--color-holiday);
+}
+
+.day-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: var(--spacing-xxs);
+}
+
+.holiday-label {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--color-holiday);
+  background: rgba(198, 69, 69, 0.08); /* 8% opacity of brand holiday red */
+  padding: 1px 5px;
+  border-radius: 3px;
+  max-width: 70%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.calendar-cell.other-month .day-number.saturday-num {
+  color: var(--color-saturday);
+  opacity: 0.6;
+}
+
+.calendar-cell.other-month .day-number.holiday-num {
+  color: var(--color-holiday);
+  opacity: 0.6;
+}
+
+.calendar-cell.other-month .holiday-label {
+  opacity: 0.5;
+}
+
 .events-container {
   flex: 1;
   overflow-y: auto;
