@@ -17,7 +17,16 @@ export function scheduleNotification(event: CalendarEvent, minutesBefore: number
   if (delay < 0) return; // Already passed
   
   const timerId = window.setTimeout(() => {
-    if (Notification.permission === 'granted') {
+    const api = (window as any).electronAPI;
+    if (api && api.showAlarm) {
+      // Trigger desktop alarm
+      api.showAlarm({
+        title: event.title,
+        time: event.startDate,
+        description: event.description || ''
+      });
+    } else if (Notification.permission === 'granted') {
+      // Fallback for browser
       new Notification(`⏰ ${event.title}`, {
         body: `${minutesBefore}분 후 시작 — ${new Date(event.startDate).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}`,
         icon: '/icon-192.png',

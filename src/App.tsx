@@ -12,8 +12,16 @@ import { requestNotificationPermission, scheduleNotification, cancelNotification
 import { supabase, isSupabaseConfigured } from './lib/supabase-client';
 import { AuthModal } from './components/AuthModal';
 import { addMonths } from 'date-fns';
+import { AlarmOverlay } from './components/AlarmOverlay';
 
 function App() {
+  // Check if we are inside the Alarm Window route
+  const isAlarmRoute = window.location.search.includes('alarm=true');
+
+  if (isAlarmRoute) {
+    return <AlarmOverlay />;
+  }
+
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [showBanner, setShowBanner] = useState(false);
@@ -96,6 +104,26 @@ function App() {
     return () => {
       window.removeEventListener('calendar-events-updated', handleUpdate);
     };
+  }, []);
+
+  // 3. Electron Snooze Reschedule Listener
+  useEffect(() => {
+    const api = (window as any).electronAPI;
+    if (api && api.onRescheduleSnooze) {
+      api.onRescheduleSnooze((data: any) => {
+        const snoozeMinutes = data.minutes || 5;
+        // Reschedule alarm in snoozeMinutes (e.g., 5 minutes)
+        setTimeout(() => {
+          if (api.showAlarm) {
+            api.showAlarm({
+              title: `[다시 알림] ${data.alarmData.title}`,
+              time: new Date().toISOString(), // Current trigger time
+              description: data.alarmData.desc
+            });
+          }
+        }, snoozeMinutes * 60 * 1000);
+      });
+    }
   }, []);
 
   const handleAllowNotifications = async () => {

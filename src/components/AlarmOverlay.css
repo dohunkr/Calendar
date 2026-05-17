@@ -1,0 +1,186 @@
+.alarm-window-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  box-sizing: border-box;
+  user-select: none;
+  -webkit-app-region: drag; /* Draggable window zone */
+}
+
+.alarm-pulsing-neon-border {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  right: 4px;
+  bottom: 4px;
+  border-radius: var(--rounded-md);
+  border: 2px solid var(--color-brand);
+  pointer-events: none;
+  z-index: 10;
+  animation: alarm-pulse 1.4s infinite ease-in-out;
+}
+
+.alarm-card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: var(--color-surface-card);
+  border-radius: var(--rounded-md);
+  padding: 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  -webkit-app-region: no-drag; /* Interactable contents */
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--color-hairline);
+}
+
+.alarm-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--color-hairline);
+  padding-bottom: 12px;
+}
+
+.alarm-icon {
+  font-size: 20px;
+  animation: alarm-wiggle 0.5s infinite alternate ease-in-out;
+}
+
+.alarm-badge {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--color-brand);
+  background: rgba(255, 87, 34, 0.1);
+  padding: 2px 8px;
+  border-radius: var(--rounded-xs);
+}
+
+.alarm-live-clock {
+  margin-left: auto;
+  font-size: 14px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-muted);
+}
+
+.alarm-body {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 16px 0;
+}
+
+.alarm-title {
+  font-size: 24px;
+  font-weight: 800;
+  margin: 0 0 8px 0;
+  color: var(--color-ink);
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+}
+
+.alarm-time-tag {
+  font-size: 13px;
+  color: var(--color-muted);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.alarm-time-tag span {
+  color: var(--color-ink);
+  font-weight: 600;
+}
+
+.alarm-description {
+  font-size: 13px;
+  color: var(--color-muted);
+  margin: 8px 0 0 0;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.alarm-footer {
+  display: flex;
+  gap: 10px;
+}
+
+.alarm-btn-primary {
+  flex: 1;
+  background: var(--color-brand);
+  color: #fff;
+  border: none;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 12px;
+  border-radius: var(--rounded-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 15px rgba(255, 87, 34, 0.3);
+}
+
+.alarm-btn-primary:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+.alarm-btn-secondary {
+  flex: 1;
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  border: 1px solid var(--color-hairline);
+  font-size: 14px;
+  font-weight: 600;
+  padding: 12px;
+  border-radius: var(--rounded-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.alarm-btn-secondary:hover {
+  background: var(--color-surface-soft);
+  border-color: var(--color-muted);
+  transform: translateY(-1px);
+}
+
+/* Animations */
+@keyframes alarm-pulse {
+  0% {
+    box-shadow: inset 0 0 10px rgba(255, 87, 34, 0.4), 0 0 10px rgba(255, 87, 34, 0.2);
+    border-color: rgba(255, 87, 34, 0.4);
+  }
+  50% {
+    box-shadow: inset 0 0 25px rgba(255, 87, 34, 0.8), 0 0 20px rgba(255, 87, 34, 0.6);
+    border-color: rgba(255, 87, 34, 0.9);
+  }
+  100% {
+    box-shadow: inset 0 0 10px rgba(255, 87, 34, 0.4), 0 0 10px rgba(255, 87, 34, 0.2);
+    border-color: rgba(255, 87, 34, 0.4);
+  }
+}
+
+@keyframes alarm-wiggle {
+  0% { transform: rotate(-10deg) scale(1); }
+  100% { transform: rotate(10deg) scale(1.1); }
+}
