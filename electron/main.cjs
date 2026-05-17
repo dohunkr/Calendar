@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Tray, Menu, ipcMain } = require('electron');
+const { app, BrowserWindow, Tray, Menu, ipcMain, nativeImage } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
@@ -11,7 +11,22 @@ let alarmWindows = [];
 const iconPath = path.join(__dirname, 'icon.png');
 if (!fs.existsSync(iconPath)) {
   const base64Data = 'iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH6AYFEgQxM5DqOAAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAAAdElEQVRYw+2WwQoAIAhD2///6B0EQUTtEnqpBy8iM6eKqgA6Zk93h9gLsBdgL8BegL0AewH2AmxdgPvk8wN8wBvY14v0WAGu919LwPX+6wm43n89Adf7ryfgev/1BFzvv56A6/3XE3C9/3oCrvdfT8D1/us/8APu2S5v3W9y/AAAAABJRU5ErkJggg==';
-  fs.writeFileSync(iconPath, Buffer.from(base64Data, 'base64'));
+  try {
+    fs.writeFileSync(iconPath, Buffer.from(base64Data, 'base64'));
+  } catch (e) {
+    // Fail silent
+  }
+}
+
+// Get loaded app icon helper
+function getAppIcon() {
+  try {
+    if (fs.existsSync(iconPath)) {
+      const img = nativeImage.createFromPath(iconPath);
+      if (!img.isEmpty()) return img;
+    }
+  } catch (e) {}
+  return nativeImage.createEmpty();
 }
 
 // Set up startup registration
@@ -33,7 +48,7 @@ function createMainWindow() {
     width: 1200,
     height: 800,
     title: 'DohunCalender',
-    icon: iconPath,
+    icon: getAppIcon(),
     webPreferences: {
       preload: path.join(__dirname, 'preload.cjs'),
       contextIsolation: true,
@@ -61,7 +76,11 @@ function createMainWindow() {
 }
 
 function createTray() {
-  tray = new Tray(iconPath);
+  let trayIcon = getAppIcon();
+  if (trayIcon.isEmpty()) {
+    trayIcon = nativeImage.createEmpty();
+  }
+  tray = new Tray(trayIcon);
   
   const contextMenu = Menu.buildFromTemplate([
     { label: 'DohunCalender 열기', click: () => mainWindow.show() },
@@ -106,7 +125,7 @@ ipcMain.on('show-alarm', (event, alarmData) => {
     alwaysOnTop: true,
     resizable: false,
     skipTaskbar: true,
-    icon: iconPath,
+    icon: getAppIcon(),
     webPreferences: {
       preload: path.join(__dirname, 'preload.cjs'),
       contextIsolation: true,
