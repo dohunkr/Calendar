@@ -106,6 +106,11 @@ function App() {
     };
   }, []);
 
+  // 2.5. Reactive Notification Rescheduler on Event changes
+  useEffect(() => {
+    initNotifications();
+  }, [events]);
+
   // 3. Electron Snooze Reschedule Listener
   useEffect(() => {
     const api = (window as any).electronAPI;
