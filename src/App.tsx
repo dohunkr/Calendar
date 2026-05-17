@@ -6,9 +6,11 @@ import { EventModal } from './components/EventModal';
 import { SuggestedSlotCard } from './components/SuggestedSlotCard';
 import { NotificationBanner } from './components/NotificationBanner';
 import { CalendarEvent, SuggestedSlot } from './lib/types';
-import { loadEvents, saveEvents } from './lib/storage';
+import { loadEvents, saveEvents, syncLocalEventsToCloud, syncFromCloud } from './lib/storage';
 import { parseEventFromNaturalLanguage, findAndScheduleFreeSlot } from './lib/nim-api';
 import { requestNotificationPermission, scheduleNotification, cancelNotification, initNotifications } from './lib/notifications';
+import { supabase, isSupabaseConfigured } from './lib/supabase-client';
+import { AuthModal } from './components/AuthModal';
 import { addMonths } from 'date-fns';
 
 function App() {
@@ -24,6 +26,11 @@ function App() {
   const [isAILoading, setIsAILoading] = useState(false);
   const [suggestions, setSuggestions] = useState<SuggestedSlot[]>([]);
 
+  // Auth states
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+
+  // 1. Initial Load and Auth Subscription
   useEffect(() => {
     setEvents(loadEvents());
     
@@ -33,6 +40,42 @@ function App() {
     } else {
       initNotifications();
     }
+
+    if (isSupabaseConfigured) {
+      // Get initial session
+      supabase.auth.getSession().then((res: any) => {
+        const session = res.data?.session;
+        if (session?.user?.email) {
+          setUserEmail(session.user.email);
+          syncFromCloud();
+        }
+      });
+
+      // Listen for auth changes
+      const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: any, session: any) => {
+        if (session?.user?.email) {
+          setUserEmail(session.user.email);
+          syncLocalEventsToCloud().then(() => syncFromCloud());
+        } else {
+          setUserEmail(null);
+        }
+      });
+
+      return () => {
+        subscription.unsubscribe();
+      };
+    }
+  }, []);
+
+  // 2. Reactive LocalStorage update listener
+  useEffect(() => {
+    const handleUpdate = () => {
+      setEvents(loadEvents());
+    };
+    window.addEventListener('calendar-events-updated', handleUpdate);
+    return () => {
+      window.removeEventListener('calendar-events-updated', handleUpdate);
+    };
   }, []);
 
   const handleAllowNotifications = async () => {
@@ -142,6 +185,15 @@ function App() {
         currentDate={currentDate} 
         onDateChange={setCurrentDate} 
         onAddEvent={() => { setEditingEvent(null); setIsModalOpen(true); }}
+        userEmail={userEmail}
+        onOpenAuth={() => setIsAuthModalOpen(true)}
+        onLogout={async () => {
+          if (isSupabaseConfigured) {
+            await supabase.auth.signOut();
+            setUserEmail(null);
+            alert('로그아웃되었습니다.');
+          }
+        }}
       />
       
       <div className="main-content">
@@ -199,6 +251,14 @@ function App() {
         onSave={handleSaveEvent}
         onDelete={handleDeleteEvent}
         initialData={editingEvent}
+      />
+
+      <AuthModal 
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        onSuccess={(email) => {
+          setUserEmail(email);
+        }}
       />
     </div>
   );

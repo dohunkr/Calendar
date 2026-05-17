@@ -95,3 +95,66 @@
   background: var(--color-primary);
   color: white;
 }
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.user-badge {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--color-hairline);
+  padding: 6px 14px;
+  border-radius: var(--rounded-md);
+  font-family: var(--font-body);
+  font-size: 13px;
+  transition: all 0.2s ease;
+}
+
+.user-email {
+  color: var(--color-muted);
+  font-weight: 500;
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.login-btn {
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--color-hairline);
+  color: var(--color-ink);
+  transition: all 0.2s ease;
+}
+
+.login-btn:hover {
+  background: rgba(204, 120, 92, 0.05);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  box-shadow: 0 0 10px rgba(204, 120, 92, 0.1);
+}
+
+.logout-btn {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid transparent;
+  color: var(--color-muted);
+  cursor: pointer;
+  border-radius: var(--rounded-xs);
+  transition: all 0.2s ease;
+}
+
+.logout-btn:hover {
+  background: rgba(198, 69, 69, 0.08);
+  border-color: rgba(198, 69, 69, 0.2);
+  color: var(--color-holiday);
+}

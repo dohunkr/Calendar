@@ -7,9 +7,19 @@ interface TopNavProps {
   currentDate: Date;
   onDateChange: (date: Date) => void;
   onAddEvent: () => void;
+  userEmail: string | null;
+  onOpenAuth: () => void;
+  onLogout: () => void;
 }
 
-export function TopNav({ currentDate, onDateChange, onAddEvent }: TopNavProps) {
+export function TopNav({ 
+  currentDate, 
+  onDateChange, 
+  onAddEvent,
+  userEmail,
+  onOpenAuth,
+  onLogout
+}: TopNavProps) {
   const [showYearPicker, setShowYearPicker] = useState(false);
   const decades = generateDecades();
 
@@ -55,7 +65,17 @@ export function TopNav({ currentDate, onDateChange, onAddEvent }: TopNavProps) {
         <button className="btn-secondary nav-btn" onClick={handleNext}>▶</button>
       </div>
 
-      <button className="btn-primary" onClick={onAddEvent}>+ 일정</button>
+      <div className="nav-actions">
+        {userEmail ? (
+          <div className="user-badge">
+            <span className="user-email">☁️ {userEmail}</span>
+            <button className="btn-secondary logout-btn" onClick={onLogout}>로그아웃</button>
+          </div>
+        ) : (
+          <button className="btn-secondary login-btn" onClick={onOpenAuth}>☁️ 클라우드 로그인</button>
+        )}
+        <button className="btn-primary" onClick={onAddEvent}>+ 일정</button>
+      </div>
     </header>
   );
 }
