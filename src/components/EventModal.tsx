@@ -125,6 +125,7 @@ export function EventModal({ isOpen, onClose, onSave, onDelete, initialData }: E
             <select className="form-input" name="recurrence" value={formData.recurrence || ''} onChange={handleChange}>
               <option value="">반복 안함</option>
               <option value="daily">매일</option>
+              <option value="weekday">매주 평일 (월~금)</option>
               <option value="weekly">매주</option>
               <option value="monthly">매월</option>
               <option value="yearly">매년</option>

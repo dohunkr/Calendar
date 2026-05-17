@@ -6,7 +6,7 @@ export interface CalendarEvent {
   isAllDay: boolean;
   color: string;               // hex — 기본값 #cc785c (coral)
   description?: string;
-  recurrence?: 'daily' | 'weekly' | 'monthly' | 'yearly' | null;
+  recurrence?: 'daily' | 'weekly' | 'monthly' | 'yearly' | 'weekday' | null;
   recurrenceEndDate?: string | null;
   notifyMinutesBefore: number; // 기본 15
   createdAt: string;
@@ -17,7 +17,7 @@ export interface ParsedEvent {
   startDate: string;
   endDate: string;
   isAllDay: boolean;
-  recurrence: 'daily' | 'weekly' | 'monthly' | 'yearly' | null;
+  recurrence: 'daily' | 'weekly' | 'monthly' | 'yearly' | 'weekday' | null;
   recurrenceEndDate: string | null;
   description: string;
   color: string;

@@ -71,7 +71,9 @@ Parse the user's natural language input and extract event details.
 Current date and time: ${currentDate.toISOString()}
 Current timezone: Asia/Seoul (KST, UTC+9)
 
-CRITICAL: Extract exact times and minutes as specified by the user (e.g., "8시 20분" must be parsed exactly as "08:20:00" or "20:20:00" depending on AM/PM, NEVER round to 1-hour increments!).
+CRITICAL: 
+1. Extract exact times and minutes as specified by the user (e.g., "8시 20분" must be parsed exactly as "08:20:00" or "20:20:00" depending on AM/PM, NEVER round to 1-hour increments!).
+2. Handle weekday repetitions: If the user requests repeating on weekdays/school days (e.g., "평일마다", "매주 평일", "월~금"), set "recurrence" to "weekday". For daily, weekly, monthly, yearly, set it accordingly.
 
 Respond ONLY with a valid JSON object. No markdown, no explanation.
 JSON format:
@@ -80,7 +82,7 @@ JSON format:
   "startDate": "YYYY-MM-DDTHH:mm:ss",
   "endDate": "YYYY-MM-DDTHH:mm:ss",
   "isAllDay": false,
-  "recurrence": null | "daily" | "weekly" | "monthly" | "yearly",
+  "recurrence": null | "daily" | "weekly" | "monthly" | "yearly" | "weekday",
   "recurrenceEndDate": null | "YYYY-MM-DD",
   "description": "선택적 설명",
   "color": "#cc785c"

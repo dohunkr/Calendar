@@ -14,7 +14,12 @@ export function expandRecurrences(events: CalendarEvent[], viewStart: Date, view
     }
 
     let currentStart = new Date(event.startDate);
-    const duration = new Date(event.endDate).getTime() - currentStart.getTime();
+    if (event.recurrence === 'weekday') {
+      while (currentStart.getDay() === 0 || currentStart.getDay() === 6) {
+        currentStart = addDays(currentStart, 1);
+      }
+    }
+    const duration = new Date(event.endDate).getTime() - new Date(event.startDate).getTime();
     const endDateLimit = event.recurrenceEndDate ? new Date(event.recurrenceEndDate) : new Date(2100, 11, 31);
     const finalLimit = isBefore(endDateLimit, viewEnd) ? endDateLimit : viewEnd;
 
@@ -32,6 +37,12 @@ export function expandRecurrences(events: CalendarEvent[], viewStart: Date, view
       switch (event.recurrence) {
         case 'daily':
           currentStart = addDays(currentStart, 1);
+          break;
+        case 'weekday':
+          currentStart = addDays(currentStart, 1);
+          while (currentStart.getDay() === 0 || currentStart.getDay() === 6) {
+            currentStart = addDays(currentStart, 1);
+          }
           break;
         case 'weekly':
           currentStart = addWeeks(currentStart, 1);
